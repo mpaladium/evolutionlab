@@ -1,0 +1,19 @@
+http:
+  routers:
+    ownc-router:
+  #   rule: "Host(`s3.example.com`)"
+      rule: "Host(`subdmain.domain.com`)"  #### Change Here
+      entryPoints: [websecure]
+      service: ownc-service #### Change Here
+      tls:
+        certResolver: letsencrypt
+  ### add routes ####
+  services:
+    ownc-service:   #### Change here ### name as configured in the routers service
+      loadBalancer:
+        servers:
+       #       - url: "http://192.164.0.2:8087"
+          - url: "http://<remote-ip>:<port>"  #### Change Here
+        passHostHeader: true
+  ### add services for the routes ####
+

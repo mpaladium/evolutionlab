@@ -1,0 +1,26 @@
+http:
+  routers:
+    ownc-router:
+      rule: "Host(`xxx.xxx.org`)"
+      entryPoints: [websecure]
+      service: ownc-service
+      tls:
+        certResolver: letsencrypt
+  ####################################
+  ###### new routes to be deployed
+    # s3-router:
+    #   rule: "Host(`s3.example.com`)"
+    #   entryPoints: [websecure]
+    #   service: s3-service
+    #   tls:
+    #     certResolver: letsencrypt
+
+  services:
+    ownc-service:
+      loadBalancer:
+        servers:
+          - url: "http://xxx.xx.xx.xx:xxxx"
+        passHostHeader: true
+####################################
+###### new services to be deployed
+   

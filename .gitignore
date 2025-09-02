@@ -26,6 +26,10 @@ go.work.sum
 
 # env file
 .env
+caddy_*
+headscale/
+acme*
+*.log
 
 # Editor/IDE
 # .idea/

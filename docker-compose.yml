@@ -1,0 +1,92 @@
+# version: "3.8"
+services:
+  headscale:
+    image: headscale/headscale:0.23
+    container_name: headscale
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+      - "9090:9090"
+    volumes:
+      - ./headscale/config:/etc/headscale
+      - ./headscale/db:/var/lib/headscale
+    entrypoint: headscale serve
+    #### traefik config for reverse proxy ######
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.headscale.rule=Host(`headscale.your-domain.com`)"
+      - "traefik.http.routers.headscale.entrypoints=websecure"
+      - "traefik.http.routers.headscale.tls.certresolver=letsencrypt"
+      - "traefik.http.services.headscale.loadbalancer.server.port=8080"
+    expose:
+      - "8080"
+    ##### end of traefik #######
+    # networks:
+    #   - zukvik_network
+  
+  traefik:
+    image: traefik:v3.0
+    container_name: traefik
+    command:
+      - "--configFile=/traefik.yml"
+      - "--providers.file.directory=/etc/traefik/dynamic"
+      - "--providers.file.watch=true"
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - "./traefik/traefik.yml:/etc/traefik/traefik.yml:ro"
+      - "./traefik/dynamic.yml:/etc/traefik/dynamic.yml:ro"
+      - "./traefik/acme.json:/letsencrypt/acme.json"
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+    restart: always
+
+  # Zukvik Dummy content service
+  zukvik-web: 
+    image: nginx:alpine
+    container_name: zukvik-web
+    volumes:
+      - ./zukvikweb:/usr/share/nginx/html
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.zukvik.rule=Host(`www.your-domain.com`)"
+      - "traefik.http.routers.zukvik.entrypoints=websecure"
+      - "traefik.http.routers.zukvik.tls.certresolver=letsencrypt"
+    expose:
+      - "80"
+  
+   # Bytephile Dummy content service
+  bytephile-web:
+    image: nginx:alpine
+    container_name: bytephile-web
+    volumes:
+      - ./bytephileweb:/usr/share/nginx/html
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.bytephile.rule=Host(`www.your-domain2.com`)"
+      - "traefik.http.routers.bytephile.entrypoints=websecure"
+      - "traefik.http.routers.bytephile.tls.certresolver=letsencrypt"
+    expose:
+      - "80"
+
+  ##### test smtp server
+  smtpserver:
+    image: mailhog/mailhog:v1.0.1
+    container_name: mailhog
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.maildemo.rule=Host(`maildemo.your-domain.com`)"
+      - "traefik.http.routers.maildemo.entrypoints=websecure"
+      - "traefik.http.routers.maildemo.tls.certresolver=letsencrypt"
+      - "traefik.http.services.maildemo.loadbalancer.server.port=8025"
+    ports:
+      - "1025:1025"  # SMTP (used by your app)
+    expose:
+      - "8025"
+
+    restart: unless-stopped
+ 
+    
+networks:
+  zukvik_network:
+    external: false
