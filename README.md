@@ -190,7 +190,7 @@ Further notes is scope documentation, compares deployment setups for **personal,
   - Enterprise-grade IAM, RBAC, auditing, compliance management
 
 ---
-This repo is masked and clean version of [working lab setup](github.com:mpaladium/zukvik).
+This repo is masked and clean version of [working lab setup](https://github.com:mpaladium/zukvik).
 Some services running actively
 - [bytephile](https://www.bytephile.cc) - demo page to handle multiple domains.
 - [zukvik](https://www.zukvik.org) - demo page
