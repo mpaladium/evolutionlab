@@ -35,7 +35,7 @@ sudo tailscale up --login-server=<https-url> --authkey <Authkey>
  - [✓] Current weekly auto deployments if there is any change. But configurable.
  - [✓] Host multiple domains, services can run on any your node.
  - [✓] Traefik manages dynamic routing for all your subdomain routing.
- - [ ] Auth services.
+ - [✓] Auth services.
  - [ ] Automate subdomain handling on cloudflare with RESTAPI or bash
 
 # Changes 19.Apr.2024
@@ -197,3 +197,4 @@ Some services running actively
 - [matchplayground](https://matchplayground.zukvik.org) - a fun LLM based profile match making chat engine.
 - [owncloud](https://namabbu.zukvik.org) - private owncloud setup running on raspberry pi. currently down
 - [demoservice](https://demo.zukvik.org) - to give public access and demonstrate any web based service.
+- [authentication](https://accounts.zukvik.org) - Work in Progress a FIDO, web Authn based fullstack auth server.
